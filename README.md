@@ -4,4 +4,4 @@ This GreaseMonkey plugin adds another tracker to the exchange page. This tracker
 # Installation
 Simply add the script to grease monkey, you will find the added table underneath the market depth graph
 
-![img](img.png)
+![img](https://github.com/bryan-pakulski/GreaseMonkey-Poloniex-Market-Power-Tracker/blob/master/img.PNG)
