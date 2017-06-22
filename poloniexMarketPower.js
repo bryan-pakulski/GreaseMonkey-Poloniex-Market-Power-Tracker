@@ -40,6 +40,15 @@ function addData(chart, label, data1, data2, data3, data4) {
   chart.data.datasets[2].data.push(data3);
   chart.data.datasets[3].data.push(data4);
 
+  // Manage array size to be under 150 data points
+  if (chart.data.datasets[0].data.length > 150)
+  {
+  	chart.data.datasets[0].data.shift();
+  	chart.data.datasets[1].data.shift();
+  	chart.data.datasets[2].data.shift();
+  	chart.data.datasets[3].data.shift();
+  }
+
   chart.data.labels.push(label);
 
   chart.update();
@@ -111,18 +120,24 @@ var mixedChart = new Chart(ctx, {
           data: [],
           borderColor: "#27892f",
           backgroundColor: "rgba(39, 137, 47, 0.3)",
+          pointBorderWidth: 1,
+          pointRadius: 1,
           yAxisId: '1'
         }, {
           label: 'Selling Power',
           data: [],
           borderColor: "#b72219",
           backgroundColor: "rgba(183, 34, 25, 0.3)",
+          pointBorderWidth: 1,
+          pointRadius: 1,
           yAxisId: '1'
         }, {
           label: 'Market Share',
           data: [],
           borderColor: "#aaaa2f",
           backgroundColor: "rgba(170, 170, 47, 0.3)",
+          pointBorderWidth: 1,
+          pointRadius: 1,
           lineTension: 1,
           yAxisId: '1'
         }, {
@@ -130,6 +145,8 @@ var mixedChart = new Chart(ctx, {
           data: [],
           borderColor: "#004f89",
           backgroundColor: "rgba(0, 79, 137, 0.3)",
+          pointBorderWidth: 1,
+          pointRadius: 1,
           lineTension: 1,
           yAxisId: '2'
         }],
