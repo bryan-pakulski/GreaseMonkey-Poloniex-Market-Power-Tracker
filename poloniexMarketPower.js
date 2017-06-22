@@ -5,9 +5,45 @@
 // @include     https://poloniex.com/exchange*
 // @version     1
 // @grant       none
+// @require     https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.js
 // ==/UserScript==
 
 var ticker = 2500; // Time in seconds before updating the chart, defaults to 2.5
+var currentdate = new Date(); 
+
+// So many variables...
+var bullO = 0;
+var bullP = 0;
+var bullM = 0;
+var bearO = 0;
+var bearP = 0;
+var bearM = 0;
+var lastbuy = 0;
+
+// Returns time
+function getTime()
+{
+	currentdate = new Date();
+
+	var time = currentdate.getHours() + ":"  
+        + currentdate.getMinutes() + ":" 
+    	+ currentdate.getSeconds();
+
+    return time
+}
+
+// Adds data to chart
+function addData(chart, label, data1, data2, data3, data4) {
+  
+  chart.data.datasets[0].data.push(data1);
+  chart.data.datasets[1].data.push(data2);
+  chart.data.datasets[2].data.push(data3);
+  chart.data.datasets[3].data.push(data4);
+
+  chart.data.labels.push(label);
+
+  chart.update();
+}
 
 // Create the watcher
 var watcher = document.createElement("div");
@@ -49,15 +85,84 @@ body.innerHTML = "<table id='market_weighting_table' class='dataTable no-footer'
   "</tr>"+
   "</table>"  
 
+// Chart
+var chart = document.createElement("canvas")
+chart.id = "market_weight_chart"
+chart.height = "200"
+chart.width = "1231"
+
 // Append children
 head.appendChild(title);
 watcher.appendChild(head);
 watcher.appendChild(body);
+watcher.appendChild(chart);
 
 // Location to insert watcher
 var location = document.getElementsByClassName("marketDepth")[0];
 location.parentNode.insertBefore(watcher, location.nextSibling);
 
+// Chart for graphing data
+var ctx = document.getElementById("market_weight_chart").getContext('2d');
+var mixedChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+          label: 'Buying Power',
+          data: [],
+          borderColor: "#27892f",
+          backgroundColor: "rgba(39, 137, 47, 0.3)",
+          yAxisId: '1'
+        }, {
+          label: 'Selling Power',
+          data: [],
+          borderColor: "#b72219",
+          backgroundColor: "rgba(183, 34, 25, 0.3)",
+          yAxisId: '1'
+        }, {
+          label: 'Market Share',
+          data: [],
+          borderColor: "#aaaa2f",
+          backgroundColor: "rgba(170, 170, 47, 0.3)",
+          lineTension: 1,
+          yAxisId: '1'
+        }, {
+          label: 'Price',
+          data: [],
+          borderColor: "#004f89",
+          backgroundColor: "rgba(0, 79, 137, 0.3)",
+          lineTension: 1,
+          yAxisId: '2'
+        }],
+    labels: []
+  },
+  options: [{
+  	scales: {
+            xAxes: [{
+                afterTickToLabelConversion: function(data){
+
+
+                    var xLabels = data.ticks;
+
+                    xLabels.forEach(function (labels, i) {
+                        if (i % 2 == 1){
+                            xLabels[i] = '';
+                        }
+                    });
+                } 
+            }],
+            yAxes: [{
+		        id: '1',
+		        type: 'linear',
+		        position: 'left',
+		      }, {
+		        id: '2',
+		        type: 'linear',
+		        position: 'right',
+		      }]
+
+        }
+  }]
+});
 
 // Fields to update
 a1 = document.getElementById('a1');
@@ -69,16 +174,20 @@ b3 = document.getElementById('b3');
 
 // Update function
 window.setInterval(function(){
-
-  // So many variables...
-  var bullO = 0;
-  var bullP = 0;
-  var bullM = 0;
-  var bearO = 0;
-  var bearP = 0;
-  var bearM = 0;
-
   
+  // Update graph with buying power, total owned market share and the price per coin
+  if (bullO != 0){
+  	addData(mixedChart, getTime(), bullP, -bearP, bullM, lastbuy)
+  }
+  
+  bullO = 0;
+  bullP = 0;
+  bullM = 0;
+  bearO = 0;
+  bearP = 0;
+  bearM = 0;
+
+  // Update tables
   $("#tradeHistoryTable tbody tr").each(function(){
     if (this.cells[1].innerHTML.indexOf("Buy") == -1){
       bearO += 1;
@@ -88,6 +197,11 @@ window.setInterval(function(){
     {
       bullO += 1;
       bullM += parseFloat(this.cells[4].innerHTML);
+    }
+    // Keey track of current price
+    if (bearO <= 1)
+    {
+    	lastbuy = parseFloat(this.cells[2].innerHTML);
     }
   });
     
