@@ -40,13 +40,14 @@ function addData(chart, label, data1, data2, data3, data4) {
   chart.data.datasets[2].data.push(data3);
   chart.data.datasets[3].data.push(data4);
 
-  // Manage array size to be under 150 data points
+  // Manage array size to be under 200 data points
   if (chart.data.datasets[0].data.length > 150)
   {
   	chart.data.datasets[0].data.shift();
   	chart.data.datasets[1].data.shift();
   	chart.data.datasets[2].data.shift();
   	chart.data.datasets[3].data.shift();
+  	chart.data.labels.shift();
   }
 
   chart.data.labels.push(label);
