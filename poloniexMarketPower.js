@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 var ticker = 2500; // Time in seconds before updating the chart, defaults to 2.5
-var currentdate = new Date(); 
+var currentdate = new Date();
 
 // So many variables...
 var bullO = 0;
@@ -25,16 +25,16 @@ function getTime()
 {
 	currentdate = new Date();
 
-	var time = currentdate.getHours() + ":"  
-        + currentdate.getMinutes() + ":" 
-    	+ currentdate.getSeconds();
+	var time = currentdate.getHours() + ":" +
+        currentdate.getMinutes() + ":" +
+        currentdate.getSeconds();
 
-    return time
+    return time;
 }
 
 // Adds data to chart
 function addData(chart, label, data1, data2, data3, data4) {
-  
+
   chart.data.datasets[0].data.push(data1);
   chart.data.datasets[1].data.push(data2);
   chart.data.datasets[2].data.push(data3);
@@ -57,7 +57,7 @@ function addData(chart, label, data1, data2, data3, data4) {
 
 // Create the watcher
 var watcher = document.createElement("div");
-watcher.className = "Market_Watcher mainBox"
+watcher.className = "Market_Watcher mainBox";
 
 // CSS of watcher
 var css = "float: left;"+
@@ -75,7 +75,7 @@ title.className = "name";
 title.innerHTML = "Market Weight (Last 200 Orders)";
 
 // Main body
-var body = document.createElement("div")
+var body = document.createElement("div");
 body.innerHTML = "<table id='market_weighting_table' class='dataTable no-footer' role='grid' style='width: 100%;'>" +
   "<tr>"+
   "<th>Bull Orders</th>"+
@@ -93,13 +93,13 @@ body.innerHTML = "<table id='market_weighting_table' class='dataTable no-footer'
   "<td id='b2' class='sellClass'>-</td>"+
   "<td id='b3'>-</td>"+
   "</tr>"+
-  "</table>"  
+  "</table>";
 
 // Chart
-var chart = document.createElement("canvas")
-chart.id = "market_weight_chart"
-chart.height = "200"
-chart.width = "1231"
+var chart = document.createElement("canvas");
+chart.id = "market_weight_chart";
+chart.height = "200";
+chart.width = "1231";
 
 // Append children
 head.appendChild(title);
@@ -166,7 +166,7 @@ var mixedChart = new Chart(ctx, {
                             xLabels[i] = '';
                         }
                     });
-                } 
+                }
             }],
             yAxes: [{
 		        id: '1',
@@ -192,12 +192,12 @@ b3 = document.getElementById('b3');
 
 // Update function
 window.setInterval(function(){
-  
+
   // Update graph with buying power, total owned market share and the price per coin
   if (bullO != 0){
-  	addData(mixedChart, getTime(), bullP, -bearP, bullM, lastbuy)
+  	addData(mixedChart, getTime(), bullP, -bearP, bullM, lastbuy);
   }
-  
+
   bullO = 0;
   bullP = 0;
   bullM = 0;
@@ -216,18 +216,18 @@ window.setInterval(function(){
       bullO += 1;
       bullM += parseFloat(this.cells[4].innerHTML);
     }
-    // Keey track of current price
+    // Keep track of current price
     if (bearO <= 1)
     {
     	lastbuy = parseFloat(this.cells[2].innerHTML);
     }
   });
-    
+
   var total = bullM + bearM;
-  
+
   bullP = (bullM / total) * 100;
   bearP = (bearM / total) * 100;
-  
+
   // Push data into the table fields
   a1.innerHTML = bullO;
   a2.innerHTML = bullP.toFixed(8) + "%";
