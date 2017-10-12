@@ -44,11 +44,14 @@ function addData(chart, label, data1, data2, data3, data4) {
   // Manage array size to be under order_size data points
   if (chart.data.datasets[0].data.length > unsafeWindow.pmp_order_size)
   {
-  	chart.data.datasets[0].data.shift();
-  	chart.data.datasets[1].data.shift();
-  	chart.data.datasets[2].data.shift();
-  	chart.data.datasets[3].data.shift();
-  	chart.data.labels.shift();
+    for (i = 0; i < chart.data.datasets[0].data.length - unsafeWindow.pmp_order_size; i++)
+      {
+        chart.data.datasets[0].data.shift();
+        chart.data.datasets[1].data.shift();
+        chart.data.datasets[2].data.shift();
+        chart.data.datasets[3].data.shift();
+        chart.data.labels.shift();
+      }
   }
 
   chart.data.labels.push(label);
