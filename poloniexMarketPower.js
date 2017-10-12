@@ -19,6 +19,7 @@ var bearO = 0;
 var bearP = 0;
 var bearM = 0;
 var lastbuy = 0;
+unsafeWindow.pmp_order_size = 100;
 
 // Returns time
 function getTime()
@@ -40,8 +41,8 @@ function addData(chart, label, data1, data2, data3, data4) {
   chart.data.datasets[2].data.push(data3);
   chart.data.datasets[3].data.push(data4);
 
-  // Manage array size to be under 200 data points
-  if (chart.data.datasets[0].data.length > 150)
+  // Manage array size to be under order_size data points
+  if (chart.data.datasets[0].data.length > unsafeWindow.pmp_order_size)
   {
   	chart.data.datasets[0].data.shift();
   	chart.data.datasets[1].data.shift();
@@ -72,7 +73,7 @@ var head = document.createElement("div");
 head.className = "head";
 var title = document.createElement("div");
 title.className = "name";
-title.innerHTML = "Market Weight (Last 200 Orders)";
+title.innerHTML = "Market Weight (Last <foofa id='order_size'>" + unsafeWindow.pmp_order_size + "</foofa> Orders)" + "<button onclick=\"pmp_order_size += 10; document.getElementById('order_size').innerHTML=pmp_order_size;\"'>+</button>/<button onclick=\"pmp_order_size -= 10; document.getElementById('order_size').innerHTML=pmp_order_size;\">-</button>";
 
 // Main body
 var body = document.createElement("div");
